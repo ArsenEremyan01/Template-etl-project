@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  database:
+    image: "postgres:13"
+    container_name: database
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "postgres"
+    restart: always
+    volumes:
+      #- /tmp/pg-data/:/var/lib/postgresql/data/
+      - ./db/init-db-source.sql:/docker-entrypoint-initdb.d/init-db1.sql
+      - ./db/init-db-mrr.sql:/docker-entrypoint-initdb.d/init-db2.sql
+      - ./db/init-db-staging.sql:/docker-entrypoint-initdb.d/init-db3.sql
+      - ./db/init-db-dwh.sql:/docker-entrypoint-initdb.d/init-db4.sql
+    networks:
+      - etl_network
+
+networks:
+  etl_network: null
